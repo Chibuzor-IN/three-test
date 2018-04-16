@@ -1,0 +1,73 @@
+<html>
+    <script src="./three.js"></script>
+    <body draggable="true">        
+        <script>
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );    
+
+            // instantiate a loader
+            var loader = new THREE.ObjectLoader();
+
+            // load a resource
+            loader.load(
+                // resource URL
+                './Jacket and Skirt.obj',
+                // called when resource is loaded
+                function (object){
+                    scene.add( object );
+                },
+                // called when loading is in progresses
+                function (){
+                    console.log("loading");
+                },
+                // called when loading has errors
+                function (error) {
+                    console.log( 'An error happened' );
+                }
+            );
+
+            var geometry = new THREE.BoxGeometry( 1, 1, 1 );            
+            
+            //var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+            var cube = new THREE.Mesh( geometry );
+            scene.add(cube);
+
+            camera.position.z = 5;
+
+            var body = document.getElementsByTagName("body")[0];            
+
+            function setRotation(rotation){
+                cube.rotation.y += rotation;
+                //cube.rotation.x += 0.01*100;
+                //cube.rotation.y += 0.01*100;
+            }            
+
+            function onDragStart(event){
+                const mouseStartPosition = event.clientX;
+                const mouseEnd = function onDragEnd(event){
+                    const mouseEndPosition = event.clientX;
+                    const difference = ((mouseEndPosition - mouseStartPosition)/1000)*2.5;
+                    setRotation(difference)
+                    body.removeEventListener("dragend", mouseEnd)
+                }
+                body.addEventListener("dragend", mouseEnd);                
+            }
+
+            function animate() {                
+                body.addEventListener("dragstart", onDragStart);                
+                requestAnimationFrame(animate);                
+                renderer.render(scene, camera);
+                
+            }
+            animate();
+
+            
+        </script>
+    </body>
+</html>
+
+
