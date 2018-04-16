@@ -9,27 +9,6 @@
             renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );    
 
-            // instantiate a loader
-            var loader = new THREE.ObjectLoader();
-
-            // load a resource
-            loader.load(
-                // resource URL
-                './Jacket and Skirt.obj',
-                // called when resource is loaded
-                function (object){
-                    scene.add( object );
-                },
-                // called when loading is in progresses
-                function (){
-                    console.log("loading");
-                },
-                // called when loading has errors
-                function (error) {
-                    console.log( 'An error happened' );
-                }
-            );
-
             var geometry = new THREE.BoxGeometry( 1, 1, 1 );            
             
             //var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -50,7 +29,8 @@
                 const mouseStartPosition = event.clientX;
                 const mouseEnd = function onDragEnd(event){
                     const mouseEndPosition = event.clientX;
-                    const difference = ((mouseEndPosition - mouseStartPosition)/1000)*2.5;
+                    const sensitivity = 2.5
+                    const difference = ((mouseEndPosition - mouseStartPosition)/1000)*sensitivity;
                     setRotation(difference)
                     body.removeEventListener("dragend", mouseEnd)
                 }
