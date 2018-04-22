@@ -25,130 +25,14 @@
 		</style>
 	</head>
 
-	<body draggable="true">
+	<body>
 		<script src="./three.js"></script>
 
 		<script src="./DDSLoader.js"></script>
 		<script src="./MTLLoader.js"></script>
 		<script src="./OBJLoader.js"></script>
 
-
-		<script>
-
-			var container, stats;
-			var body = document.getElementsByTagName("body")[0];
-			var camera, scene, renderer;
-
-			var mouseX = 0, mouseY = 0;
-
-			var windowHalfX = window.innerWidth / 2;
-			var windowHalfY = window.innerHeight / 2;
-
-
-			init();
-			animate();
-
-
-			function init() {
-
-				container = document.createElement( 'div' );
-				document.body.appendChild( container );
-
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.z = 250;
-
-				// scene
-
-				scene = new THREE.Scene();
-
-				var ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
-				scene.add( ambientLight );
-
-				var pointLight = new THREE.PointLight( 0xffffff, 0.8 );
-				camera.add( pointLight );
-				scene.add( camera );
-
-				// model
-
-				var onProgress = function ( xhr ) {
-
-					if ( xhr.lengthComputable ) {
-
-						var percentComplete = xhr.loaded / xhr.total * 100;
-						console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
-
-					}
-
-				};
-
-				var onError = function ( xhr ) { };
-
-				THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
-
-				new THREE.MTLLoader()
-					.load( 'male02_dds.mtl', function ( materials ) {
-
-						materials.preload();
-
-						new THREE.OBJLoader()
-							.setMaterials( materials )
-							.load( 'male02.obj', function ( object ) {
-
-								object.position.y = - 95;								
-								window.object = object
-								scene.add( object );								
-
-							}, onProgress, onError );
-
-					} );
-
-				//
-
-				renderer = new THREE.WebGLRenderer();
-				
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild( renderer.domElement );
-
-				//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-
-				//
-			}			
-
-			function setRotation(rotation){
-				window.object.rotation.y += rotation;									
-			}            
-
-			function onDragStart(event){
-				const mouseStartPosition = event.clientX;
-				const mouseEnd = function onDragEnd(event){
-					const mouseEndPosition = event.clientX;
-					const sensitivity = 2.5
-					const difference = ((mouseEndPosition - mouseStartPosition)/1000)*sensitivity;
-					setRotation(difference)
-					body.removeEventListener("dragend", mouseEnd)
-				}
-				body.addEventListener("dragend", mouseEnd);                
-			}
-
-			function animate() {
-				body.addEventListener("dragstart", onDragStart);
-				requestAnimationFrame( animate );
-				render();
-
-			}
-
-			function render() {
-
-				camera.position.x += ( mouseX - camera.position.x ) * .05;
-				camera.position.y += ( - mouseY - camera.position.y ) * .05;
-
-				camera.lookAt( scene.position );
-
-				renderer.render( scene, camera );
-
-			}
-
-		</script>
-
+		<script src="./spinner.js"></script>
+		
 	</body>
 </html>
