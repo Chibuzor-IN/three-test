@@ -165,8 +165,3 @@ window.Spinner = Spinner
 window.spinner = new Spinner(target, 600, 800, 200)
 spinner.setObject("CAMISA YA 2.mtl","CAMISA YA 2.obj")
 spinner.animate()
-
-window.setTimeout(() => {		
-	// spinner.changeMaterial("shirt_dolmanv1_b_39kpolys.mtl")
-	// spinner.changeMaterial("CAMISA YA 2.mtl")	
-}, 2000)
