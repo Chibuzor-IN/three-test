@@ -6,9 +6,7 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">		
 	</head>
 
-	<body>
-
-		HELLO WORLD
+	<body>		
 		<div id="scene" style="width:fit-content;border:1px solid #ff0066;"></div>
 		<script src="./three.js"></script>
 
@@ -17,6 +15,43 @@
 		<script src="./OBJLoader.js"></script>
 
 		<script src="./dist/main.js"></script>
+
+		<button onclick="toggle()">
+			Toggle Button
+		</button>
+
+		<button onclick="setBlackMTL()">
+			Black MTL
+		</button>
+
+		<button onclick="setBlueMTL()">
+			Blue MTL
+		</button>
+
+		<button onclick="setWhiteMTL()">
+			White MTL
+		</button>
+
+		<script>
+			var mtls = ["CAMISA YA 2.mtl", "shirt_dolmanv1_b_39kpolys.mtl", "male02_dds.mtl"]
+			var index = 0
+			var toggle = function(){
+				index = (index+1)%mtls.length				
+				window.spinner.changeMaterial(mtls[index])				
+			}
+
+			var setBlackMTL = function(){
+				window.spinner.changeMaterial(mtls[2])
+			}
+
+			var setBlueMTL = function(){
+				window.spinner.changeMaterial(mtls[1])
+			}
+
+			var setWhiteMTL = function(){
+				window.spinner.changeMaterial(mtls[0])
+			}
+		</script>
 		
 	</body>
 </html>

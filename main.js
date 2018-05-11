@@ -34,7 +34,7 @@ class Spinner {
 		this.renderer.setSize(this.width, this.height );
 		
 		this.domContainer.appendChild(this.renderer.domElement);
-		THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+		// THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
 	}
 
 	onProgress = (xhr) => {
@@ -53,7 +53,7 @@ class Spinner {
 	setObject = (materialURL, objectURL) => {
 		this.materialURL = materialURL
 		this.objectURL = objectURL
-		THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+		// THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
 		new THREE.MTLLoader()
 			.load(materialURL , (materials) => {
 				materials.preload();
@@ -67,17 +67,20 @@ class Spinner {
 			} );
 	}
 
-	changeMaterial = (materialURL) => {
-		// this.materialURL = materialURL
-		// this.scene.remove(this.object)
-		// this.setObject(this.materialURL, this.objectURL)
+	changeMaterial = (materialURL) => {		
 		new THREE.MTLLoader()
-			.load(materialURL , (materials) => {
-				window.x = materials
-				materials.preload();				
+			.load(materialURL , (material) => {				
+				material.preload();			
+				var materialObjects = Object.keys(material.materials)
+
+				var count = 0
 				spinner.object.traverse((child) => {
 					if( child instanceof THREE.Mesh ){
-						child.material = window.x.create("FrontColorNoCullingID_male-02-1noCulling.JP")
+						child.material = material.materials[materialObjects[count]]						
+						count += 1
+						if (count == materialObjects.length){
+							return
+						}
 					}
 				})
 			} );
@@ -159,20 +162,11 @@ class Spinner {
 	}
 }   
 window.Spinner = Spinner
-window.spinner = new Spinner(target, 600, 800)
-spinner.setObject("male02_dds.mtl","male02.obj")
+window.spinner = new Spinner(target, 600, 800, 200)
+spinner.setObject("CAMISA YA 2.mtl","CAMISA YA 2.obj")
 spinner.animate()
-// spinner.setObject("male02.obj")
 
-
-
-window.setTimeout(() => {	
-	spinner.object.traverse((child) => {
-		if( child instanceof THREE.Mesh ){
-			window.y = child.material
-		}
-	})
-	// spinner.changeObject("male02.obj")
-	spinner.changeMaterial("male02_dds.mtl")
-	console.log("Hello")
+window.setTimeout(() => {		
+	// spinner.changeMaterial("shirt_dolmanv1_b_39kpolys.mtl")
+	// spinner.changeMaterial("CAMISA YA 2.mtl")	
 }, 2000)
