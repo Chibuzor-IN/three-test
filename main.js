@@ -5,7 +5,7 @@ var target = document.getElementById("scene");
 class Spinner {
 	constructor(domContainer, height, width, cameraDistance, sensitivity, backgroundColor){
 		this.startPosition = 0
-		this.mouseMoved = false
+		// this.mouseMoved = false
 		this.sensitivity = sensitivity || 0.005
 
 		this.domContainer = domContainer
@@ -100,7 +100,8 @@ class Spinner {
 	}
 
 	setRotation = (rotation) => {
-		this.object.rotation.y += rotation;									
+		this.object.rotation.y += rotation;		
+		console.log(rotation)							
 	}
 
 	onLeave = (event) => {
@@ -108,22 +109,23 @@ class Spinner {
 		this.domContainer.removeEventListener("mouseup", this.onDragEnd)
 	}
 	
-	onDragEnd = (event) => {
-		// console.log(this.mouseMoved)
-		if(this.mouseMoved){
-			window.setTimeout(() => {
-				this.domContainer.removeEventListener("mousemove", this.onMouseMove)
-				this.domContainer.removeEventListener("mouseleave", this.onLeave)
-				this.sensitivity = 0.00005
-			}, 2000)  			
+	onDragEnd = (event) => {		
+		this.domContainer.removeEventListener("mousemove", this.onMouseMove)
+		this.domContainer.removeEventListener("mouseleave", this.onLeave)		
+		this.domContainer.removeEventListener("mouseup", this.onDragEnd) 
+
+		var continueRotation = true
+		window.setTimeout(()=>{
+			continueRotation = false
+			console.log("Hello")
+		}, 500)
+		const rotationDelay = () => {
+			if(continueRotation){
+				this.setRotation(this.rotation)
+				requestAnimationFrame(rotationDelay)
+			}			
 		}
-		else{
-			this.domContainer.removeEventListener("mousemove", this.onMouseMove)
-			this.domContainer.removeEventListener("mouseleave", this.onLeave)
-		}
-		
-		this.mouseMoved = false
-		this.domContainer.removeEventListener("mouseup", this.onDragEnd)                
+		rotationDelay()
 	}            
 	
 	onMouseMove = (event) => {
@@ -131,10 +133,8 @@ class Spinner {
 		var rotation = (currentPosition - this.startPosition)*this.sensitivity
 		
 		this.setRotation(rotation)
-		
+		this.rotation = rotation
 		this.startPosition = currentPosition
-		this.mouseMoved = true
-		// console.log("Moved")
 	}
 	
 	onDragStart = (event) => {
