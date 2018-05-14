@@ -74,7 +74,7 @@ class Spinner {
 				var materialObjects = Object.keys(material.materials)
 
 				var count = 0
-				spinner.object.traverse((child) => {
+				this.object.traverse((child) => {
 					if( child instanceof THREE.Mesh ){
 						child.material = material.materials[materialObjects[count]]						
 						count += 1
@@ -99,9 +99,45 @@ class Spinner {
 		// 			}, this.onProgress, this.onError );
 	}
 
+	changeTexture = (textureURL) => {
+		var count = 0
+		this.object.traverse((child) => {
+			if( child instanceof THREE.Mesh ){
+				window.y = child.material
+				
+				// child.material.map = THREE.ImageUtils.loadTexture(texture);		
+				
+				var loader = new THREE.TextureLoader();
+
+				var texture = loader.load( textureURL, (texture) => {
+
+					texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+					texture.offset.set( 0, 0 );
+					texture.repeat.set( 2, 2 );
+
+				} );
+				
+				if(child.material[0]){
+					child.material[count].needsUpdate = true
+					child.material[count].map = texture
+				}
+				else{
+					child.material.needsUpdate = true
+					child.material.map = texture
+				}
+				
+
+				count += 1
+				// if (count == materialObjects.length){
+				// 	return
+				// }
+			}
+		})
+	}
+
 	setRotation = (rotation) => {
 		this.object.rotation.y += rotation;		
-		console.log(rotation)							
+						
 	}
 
 	onLeave = (event) => {
@@ -117,7 +153,7 @@ class Spinner {
 		var continueRotation = true
 		window.setTimeout(()=>{
 			continueRotation = false
-			console.log("Hello")
+
 		}, 500)
 		const rotationDelay = () => {
 			if(continueRotation){
@@ -163,5 +199,6 @@ class Spinner {
 }   
 window.Spinner = Spinner
 window.spinner = new Spinner(target, 600, 800, 200)
-spinner.setObject("CAMISA YA 2.mtl","CAMISA YA 2.obj")
+// spinner.setObject("CAMISA YA 2.mtl","CAMISA YA 2.obj")
+spinner.setObject("shirt_dolmanv1_b_39kpolys.mtl","shirt_dolmanv1_b_39kpolys.obj")
 spinner.animate()

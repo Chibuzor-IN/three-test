@@ -18,11 +18,7 @@
 
 		<button onclick="toggle()">
 			Toggle Button
-		</button>
-
-		<button onclick="setBlackMTL()">
-			Black MTL
-		</button>
+		</button>		
 
 		<button onclick="setBlueMTL()">
 			Blue MTL
@@ -32,8 +28,26 @@
 			White MTL
 		</button>
 
+		<button onclick="setBlackMTL()">
+			Black MTL
+		</button>
+
+		<button onclick="set01Texture()">
+			Texture 01
+		</button>
+
+		<button onclick="set02Texture()">
+			Texture 02
+		</button>
+
+		<button onclick="set03Texture()">
+			Texture 03
+		</button>
+
 		<script>
 			var mtls = ["CAMISA YA 2.mtl", "shirt_dolmanv1_b_39kpolys.mtl", "male02_dds.mtl"]
+			var textures = ["01.jpg", "02.jpeg", "03.jpeg", "04.jpeg", "05.jpeg"]
+
 			var index = 0
 			var toggle = function(){
 				index = (index+1)%mtls.length				
@@ -50,6 +64,18 @@
 
 			var setWhiteMTL = function(){
 				window.spinner.changeMaterial(mtls[0])
+			}
+
+			var set01Texture = function(){
+				window.spinner.changeTexture(textures[0])
+			}
+
+			var set02Texture = function(){
+				window.spinner.changeTexture(textures[1])
+			}
+
+			var set03Texture = function(){
+				window.spinner.changeTexture(textures[2])
 			}
 		</script>
 		

@@ -6,8 +6,8 @@ Ks 0.000000 0.000000 0.000000
 Ns 5.000000
 illum 2
 d 1.000000
-map_Ka 01.jpg
-map_Kd 01.jpg
+map_Ka 02.jpeg
+map_Kd 02.jpeg
 newmtl Material1513823
 Ka 0.362076 0.391972 0.491626
 Kd 0.390573 0.422822 0.530319
@@ -15,8 +15,8 @@ Ks 0.000000 0.000000 0.000000
 Ns 5.000000
 illum 2
 d 1.000000
-map_Ka 01.jpg
-map_Kd 01.jpg
+map_Ka 02.jpeg
+map_Kd 02.jpeg
 newmtl Material1513828
 Ka 0.378685 0.405260 0.508235
 Kd 0.408489 0.437155 0.548235
