@@ -44,9 +44,17 @@
 			Texture 03
 		</button>
 
+		<button onclick="set04Texture()">
+			Texture 04
+		</button>
+
+		<button onclick="set05Texture()">
+			Texture 05
+		</button>
+
 		<script>
 			var mtls = ["CAMISA YA 2.mtl", "shirt_dolmanv1_b_39kpolys.mtl", "male02_dds.mtl"]
-			var textures = ["01.jpg", "02.jpeg", "03.jpeg", "04.jpeg", "05.jpeg"]
+			var textures = ["06.jpeg", "02.jpeg", "03.jpeg", "04.jpeg", "05.jpeg"]
 
 			var index = 0
 			var toggle = function(){
@@ -76,6 +84,14 @@
 
 			var set03Texture = function(){
 				window.spinner.changeTexture(textures[2])
+			}
+
+			var set04Texture = function(){
+				window.spinner.changeTexture(textures[3])
+			}
+
+			var set05Texture = function(){
+				window.spinner.changeTexture(textures[4])
 			}
 		</script>
 		

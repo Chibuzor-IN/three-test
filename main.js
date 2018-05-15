@@ -100,34 +100,29 @@ class Spinner {
 	}
 
 	changeTexture = (textureURL) => {
-		var count = 0
+		// var count = 0
 		this.object.traverse((child) => {
-			if( child instanceof THREE.Mesh ){
-				window.y = child.material
-				
-				// child.material.map = THREE.ImageUtils.loadTexture(texture);		
-				
+			if( child instanceof THREE.Mesh ){				
 				var loader = new THREE.TextureLoader();
 
 				var texture = loader.load( textureURL, (texture) => {
-
 					texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 					texture.offset.set( 0, 0 );
 					texture.repeat.set( 2, 2 );
-
 				} );
 				
-				if(child.material[0]){
-					child.material[count].needsUpdate = true
-					child.material[count].map = texture
+				if(child.material instanceof Array){
+					for(let item in child.material){
+						child.material[item].needsUpdate = true
+						child.material[item].map = texture
+					}					
 				}
 				else{
 					child.material.needsUpdate = true
 					child.material.map = texture
 				}
 				
-
-				count += 1
+				// count += 1
 				// if (count == materialObjects.length){
 				// 	return
 				// }
@@ -136,8 +131,7 @@ class Spinner {
 	}
 
 	setRotation = (rotation) => {
-		this.object.rotation.y += rotation;		
-						
+		this.object.rotation.y += rotation;
 	}
 
 	onLeave = (event) => {
@@ -149,24 +143,31 @@ class Spinner {
 		this.domContainer.removeEventListener("mousemove", this.onMouseMove)
 		this.domContainer.removeEventListener("mouseleave", this.onLeave)		
 		this.domContainer.removeEventListener("mouseup", this.onDragEnd) 
-
-		var continueRotation = true
-		window.setTimeout(()=>{
-			continueRotation = false
-
-		}, 500)
-		const rotationDelay = () => {
-			if(continueRotation){
-				this.setRotation(this.rotation)
-				requestAnimationFrame(rotationDelay)
-			}			
+		
+		if (this.moved){
+			var continueRotation = true
+			window.setTimeout(()=>{
+				continueRotation = false
+				this.moved = false
+			}, 500)
+			const rotationDelay = () => {
+				if(continueRotation){
+					this.setRotation(this.rotation)
+					requestAnimationFrame(rotationDelay)
+				}			
+			}
+			rotationDelay()
 		}
-		rotationDelay()
+		else{
+			this.moved = false
+		}
 	}            
 	
 	onMouseMove = (event) => {
 		var currentPosition = event.clientX
 		var rotation = (currentPosition - this.startPosition)*this.sensitivity
+
+		this.moved = true
 		
 		this.setRotation(rotation)
 		this.rotation = rotation
@@ -176,7 +177,8 @@ class Spinner {
 	onDragStart = (event) => {
 		this.startPosition = event.clientX
 		this.sensitivity = 0.005
-	
+		this.moved = false
+
 		this.domContainer.addEventListener("mouseleave", this.onLeave)
 		this.domContainer.addEventListener("mousemove", this.onMouseMove)
 		this.domContainer.addEventListener("mouseup", this.onDragEnd)
