@@ -200,7 +200,9 @@ class Spinner {
 	}
 }   
 window.Spinner = Spinner
+
+// spinner(domContainer, height, width, cameraDistance, rotationSsensitivity, backgroundColor)
 window.spinner = new Spinner(target, 600, 800, 200)
-// spinner.setObject("CAMISA YA 2.mtl","CAMISA YA 2.obj")
-spinner.setObject("shirt_dolmanv1_b_39kpolys.mtl","shirt_dolmanv1_b_39kpolys.obj")
+spinner.setObject("CAMISA YA 2.mtl","CAMISA YA 2.obj")
+// spinner.setObject("shirt_dolmanv1_b_39kpolys.mtl","shirt_dolmanv1_b_39kpolys.obj")
 spinner.animate()
