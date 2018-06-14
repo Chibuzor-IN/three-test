@@ -136,25 +136,49 @@ class Spinner {
 	}
 
 	setRotation = (rotation) => {
+		console.log(rotation)
 		this.object.rotation.y += rotation;
+	}
+
+	onTouchLeave = (event) => {
+		this.domContainer.removeEventListener("touchmove", this.onTouchMove)
+		this.domContainer.removeEventListener("touchend", this.onTouchEnd)
 	}
 
 	onLeave = (event) => {
 		this.domContainer.removeEventListener("mousemove", this.onMouseMove)
-		this.domContainer.removeEventListener("mouseup", this.onDragEnd)
+		this.domContainer.removeEventListener("mouseup", this.onDragEnd)		
+	}
 
-		this.domContainer.removeEventListener("touchmove", this.onMouseMove)
-		this.domContainer.removeEventListener("touchend", this.onDragEnd)
+	onTouchEnd = () => {
+		this.domContainer.removeEventListener("touchcancel", this.onTouchLeave)
+		this.domContainer.removeEventListener("touchmove", this.onTouchMove)
+		this.domContainer.removeEventListener("touchend", this.onTouchEnd)
+
+		if (this.moved){
+			var continueRotation = true
+			window.setTimeout(()=>{
+				continueRotation = false
+				this.moved = false
+			}, 500)
+			const rotationDelay = () => {
+				if(continueRotation){
+					this.setRotation(this.rotation)
+					requestAnimationFrame(rotationDelay)
+				}			
+			}
+			rotationDelay()
+		}
+		else{
+			this.moved = false
+		}
 	}
 	
-	onDragEnd = (event) => {		
+	onDragEnd = (event) => {	
+		console.log("End")	
 		this.domContainer.removeEventListener("mousemove", this.onMouseMove)
 		this.domContainer.removeEventListener("mouseleave", this.onLeave)		
-		this.domContainer.removeEventListener("mouseup", this.onDragEnd) 
-
-		this.domContainer.removeEventListener("touchcancel", this.onLeave)
-		this.domContainer.removeEventListener("touchmove", this.onMouseMove)
-		this.domContainer.removeEventListener("touchend", this.onDragEnd)
+		this.domContainer.removeEventListener("mouseup", this.onDragEnd) 		
 		
 		if (this.moved){
 			var continueRotation = true
@@ -173,9 +197,20 @@ class Spinner {
 		else{
 			this.moved = false
 		}
-	}            
+	}    
 	
-	onMouseMove = (event) => {
+	onTouchMove = (event) => {
+		var currentPosition = event.changedTouches[0].clientX
+		var rotation = (currentPosition - this.startPosition)*this.sensitivity
+
+		this.moved = true
+		
+		this.setRotation(rotation)
+		this.rotation = rotation
+		this.startPosition = currentPosition
+	}
+	
+	onMouseMove = (event) => {		
 		var currentPosition = event.clientX
 		var rotation = (currentPosition - this.startPosition)*this.sensitivity
 
@@ -186,24 +221,30 @@ class Spinner {
 		this.startPosition = currentPosition
 	}
 	
+	onTouchStart = (event) => {		
+		this.startPosition = event.touches[0].clientX
+		this.sensitivity = 0.005
+		this.moved = false
+
+		this.domContainer.addEventListener("touchcancel", this.onTouchLeave)
+		this.domContainer.addEventListener("touchmove", this.onTouchMove)
+		this.domContainer.addEventListener("touchend", this.onTouchEnd)
+	}
+
 	onDragStart = (event) => {
-		this.startPosition = event.clientX
+		this.startPosition = event.clientX		
 		this.sensitivity = 0.005
 		this.moved = false
 
 		this.domContainer.addEventListener("mouseleave", this.onLeave)
 		this.domContainer.addEventListener("mousemove", this.onMouseMove)
-		this.domContainer.addEventListener("mouseup", this.onDragEnd)
-
-		this.domContainer.addEventListener("touchcancel", this.onLeave)
-		this.domContainer.addEventListener("touchmove", this.onMouseMove)
-		this.domContainer.addEventListener("touchend", this.onDragEnd)
+		this.domContainer.addEventListener("mouseup", this.onDragEnd)		
 	}
 	
 	
 	animate = () => {
 		this.domContainer.addEventListener("mousedown", this.onDragStart);
-		this.domContainer.addEventListener("touchstart", this.onDragStart);
+		this.domContainer.addEventListener("touchstart", this.onTouchStart);
 		
 		requestAnimationFrame(this.animate);
 		this.render();
