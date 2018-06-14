@@ -76,7 +76,9 @@ class Spinner {
 				var count = 0
 				this.object.traverse((child) => {
 					if( child instanceof THREE.Mesh ){
-						child.material = material.materials[materialObjects[count]]						
+						console.log(child.material)
+						child.material = material.materials[materialObjects[count]]		
+						window.mat = child.material				
 						count += 1
 						if (count == materialObjects.length){
 							return
@@ -106,21 +108,24 @@ class Spinner {
 				var loader = new THREE.TextureLoader();
 
 				var texture = loader.load( textureURL, (texture) => {
+					
 					texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 					texture.offset.set( 0, 0 );
 					texture.repeat.set( 2, 2 );
+
+					if(child.material instanceof Array){
+						for(let item in child.material){
+							console.log(item)
+							child.material[item].needsUpdate = true
+							child.material[item].map = texture
+						}					
+					}
+					else{
+						child.material.needsUpdate = true
+						child.material.map = texture
+					}
 				} );
-				
-				if(child.material instanceof Array){
-					for(let item in child.material){
-						child.material[item].needsUpdate = true
-						child.material[item].map = texture
-					}					
-				}
-				else{
-					child.material.needsUpdate = true
-					child.material.map = texture
-				}
+
 				
 				// count += 1
 				// if (count == materialObjects.length){
@@ -137,12 +142,19 @@ class Spinner {
 	onLeave = (event) => {
 		this.domContainer.removeEventListener("mousemove", this.onMouseMove)
 		this.domContainer.removeEventListener("mouseup", this.onDragEnd)
+
+		this.domContainer.removeEventListener("touchmove", this.onMouseMove)
+		this.domContainer.removeEventListener("touchend", this.onDragEnd)
 	}
 	
 	onDragEnd = (event) => {		
 		this.domContainer.removeEventListener("mousemove", this.onMouseMove)
 		this.domContainer.removeEventListener("mouseleave", this.onLeave)		
 		this.domContainer.removeEventListener("mouseup", this.onDragEnd) 
+
+		this.domContainer.removeEventListener("touchcancel", this.onLeave)
+		this.domContainer.removeEventListener("touchmove", this.onMouseMove)
+		this.domContainer.removeEventListener("touchend", this.onDragEnd)
 		
 		if (this.moved){
 			var continueRotation = true
@@ -182,11 +194,16 @@ class Spinner {
 		this.domContainer.addEventListener("mouseleave", this.onLeave)
 		this.domContainer.addEventListener("mousemove", this.onMouseMove)
 		this.domContainer.addEventListener("mouseup", this.onDragEnd)
+
+		this.domContainer.addEventListener("touchcancel", this.onLeave)
+		this.domContainer.addEventListener("touchmove", this.onMouseMove)
+		this.domContainer.addEventListener("touchend", this.onDragEnd)
 	}
 	
 	
 	animate = () => {
 		this.domContainer.addEventListener("mousedown", this.onDragStart);
+		this.domContainer.addEventListener("touchstart", this.onDragStart);
 		
 		requestAnimationFrame(this.animate);
 		this.render();
